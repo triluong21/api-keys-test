@@ -1,0 +1,85 @@
+service: api-keys-test
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  tracing:
+    apiGateway: true # enable tracing
+    lambda: true
+  logs:
+    restApi: true
+  stage: ${opt:stage, 'dev'} # Stage or feature branch (HIGH-123).  Default is dev
+  backendStage: ${opt:backendStage, self:provider.stage} # used for other services and system variables so feature branches can use existing config.
+  region: us-east-1
+  
+  apiKeys:
+    - my-not-custom-key
+    - name: api-test-key
+      value: api-test-key-key-key  
+  usagePlan:
+    quota:
+      limit: 4
+      offset: 0
+      period: DAY 
+    throttle:
+      burstLimit: 200
+      rateLimit: 10
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - xray:PutTelemetryRecords
+        - xray:PutTraceSegments
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: arn:aws:logs:*:*:*         - "/*"
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: /
+          method: GET
+          private: true
+
+
+# resources:
+#   Resources:
+#     APIKey:
+#       Type: AWS::ApiGateway::ApiKey
+#       Properties:
+#         Name: APIKEYKey
+#         Description: My test keys
+#         Enabled: true
+#         GenerateDistinctId: false
+#         StageKeys:
+#           - RestApiId: ${self:provider.stage}-${self:service}
+#             StageName: ${self:provider.stage}
+
+#     APIUsagePlan:
+#       Type: AWS::ApiGateway::UsagePlan
+#       Properties:
+#         UsagePlanName: APIKEYSUsagePlan
+#         Description: My test usage UsagePlan
+#         ApiStages:
+#           - ApiId: !Ref MyRestApi
+#             Stage: 'dev'
+#         Quota:
+#           Limit: 5000
+#           Period: MONTH
+#         Throttle:
+#           BurstLimit: 200
+#           RateLimit: 100
+
+#     APIUsagePlanKey:
+#       Type: AWS::ApiGateway::UsagePlanKey
+#       Properties:
+#         KeyId: !Ref APIKey
+#         KeyType: API_KEY
+#         UsagePlanId: !Ref APIUsagePlan 
+
