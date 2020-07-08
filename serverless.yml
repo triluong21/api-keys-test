@@ -41,12 +41,14 @@ provider:
 functions:
   hello:
     handler: handler.hello
+    timeout: 30
+    reservedConcurrency: 5
     events:
       - http:
           path: /
           method: GET
           private: true
-
+    
 
 # resources:
 #   Resources:

@@ -1,0 +1,39 @@
+{
+	"info": {
+		"_postman_id": "49c7eac0-89b0-4c03-941f-af93cd1687d4",
+		"name": "API Keys UsagePlan ConcurrencyControl Example",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Call using API Key",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "api-test-key-key-key",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://grl232o75m.execute-api.us-east-1.amazonaws.com/dev/",
+					"protocol": "https",
+					"host": [
+						"grl232o75m",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
